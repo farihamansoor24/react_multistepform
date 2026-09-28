@@ -2,10 +2,10 @@ import './App.css';
 import { useState } from "react";
 import Footer from './components/Footer';
 import Header from './components/Header';
-import Step_1 from './components/Step-1';
-import Step_2 from './components/Step-2';
-import Step_3 from './components/Step-3';
-import Step_4 from './components/Step-4';
+import Step1 from './components/Step-1';
+import Step2 from './components/Step-2';
+import Step3 from './components/Step-3';
+import Step4 from './components/Step-4';
 
 function App() {
   const [step, setStep] = useState(1);
@@ -104,10 +104,10 @@ function App() {
           {step <= totalSteps ? (
             <form id="multiStepForm" onSubmit={handleSubmit} className="p-6 sm:p-8">
               {/* STEP COMPONENTS */}
-              {step === 1 && <Step_1 setStep={setStep} />}
-              {step === 2 && <Step_2 setStep={setStep} />}
-              {step === 3 && <Step_3 setStep={setStep} />}
-              {step === 4 && <Step_4 setStep={setStep} />}
+              {step === 1 && <Step1 setStep={setStep} />}
+              {step === 2 && <Step2 setStep={setStep} />}
+              {step === 3 && <Step3 setStep={setStep} />}
+              {step === 4 && <Step4 setStep={setStep} />}
 
               {/* Form Controls / Action Buttons */}
               <div className="mt-8 flex justify-between items-center pt-4 border-t border-indigo-900/40">
