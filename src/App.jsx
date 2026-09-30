@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Step1 from './components/Step-1';
@@ -9,6 +9,23 @@ import Step4 from './components/Step-4';
 
 function App() {
   const [step, setStep] = useState(1);
+  const formRef = useRef(null); // Clean React DOM reference
+
+  const [formData, setFormData] = useState({
+    // Step-1
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    // Step-2
+    firstName: "",
+    lastName: "",
+    phone: "",
+    role: "",
+    // Step-3
+    subscription: "",
+  });
+
   const totalSteps = 4;
 
   const stepTitles = {
@@ -18,10 +35,24 @@ function App() {
     4: 'Review & Confirm'
   };
 
+  // Generic handler jo har type ke input field ki state update karega
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
   const handleNext = (e) => {
     e.preventDefault();
-    if (step < totalSteps) {
-      setStep((prev) => prev + 1);
+    // HTML5 validation check
+    if (formRef.current && formRef.current.checkValidity()) {
+      if (step < totalSteps) {
+        setStep((prev) => prev + 1);
+      }
+    } else {
+      formRef.current?.reportValidity(); // Error popup trigger karega
     }
   };
 
@@ -34,13 +65,13 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStep(5); // Step 5 means Success Screen
+    console.log("Final Data Submitted:", formData);
+    setStep(5); // Success Screen
   };
 
   return (
     <>
       <Header />
-      {/* Main Container */}
       <main className="flex-grow flex items-center justify-center p-4 sm:p-6 md:p-8 min-h-[calc(100vh-120px)]">
         <div className="w-full max-w-3xl bg-slate-900/90 backdrop-blur-xl rounded-2xl shadow-2xl shadow-indigo-950/50 border border-indigo-500/20 overflow-hidden">
           
@@ -48,15 +79,12 @@ function App() {
             <div className="bg-slate-900/60 p-6 border-b border-indigo-900/40">
               {/* Desktop Tracker */}
               <div className="hidden sm:flex justify-between items-center relative">
-                {/* Progress Bar Background */}
                 <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-800 -translate-y-1/2 z-0"></div>
-                {/* Active Progress Bar */}
                 <div
                   className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-brand-600 to-accent-500 -translate-y-1/2 z-0 transition-all duration-300"
                   style={{ width: `${((step - 1) / (totalSteps - 1)) * 100}%` }}
                 ></div>
 
-                {/* Step Indicators */}
                 {[
                   { num: 1, label: 'Account' },
                   { num: 2, label: 'Personal' },
@@ -102,14 +130,14 @@ function App() {
 
           {/* Form Wrapper */}
           {step <= totalSteps ? (
-            <form id="multiStepForm" onSubmit={handleSubmit} className="p-6 sm:p-8">
+            <form ref={formRef} onSubmit={handleSubmit} className="p-6 sm:p-8">
               {/* STEP COMPONENTS */}
-              {step === 1 && <Step1 setStep={setStep} />}
-              {step === 2 && <Step2 setStep={setStep} />}
-              {step === 3 && <Step3 setStep={setStep} />}
-              {step === 4 && <Step4 setStep={setStep} />}
+              {step === 1 && <Step1 formData={formData} handleChange={handleChange} />}
+              {step === 2 && <Step2 formData={formData} handleChange={handleChange} />}
+              {step === 3 && <Step3 formData={formData} handleChange={handleChange} />}
+              {step === 4 && <Step4 formData={formData} setStep={setStep} />}
 
-              {/* Form Controls / Action Buttons */}
+              {/* Action Buttons */}
               <div className="mt-8 flex justify-between items-center pt-4 border-t border-indigo-900/40">
                 {step > 1 ? (
                   <button
@@ -142,14 +170,14 @@ function App() {
               </div>
             </form>
           ) : (
-            /* Success Confirmation Screen */
+            /* Success Screen */
             <div id="successScreen" className="p-8 sm:p-12 text-center">
               <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce text-2xl font-bold">
                 ✓
               </div>
               <h2 className="text-3xl font-bold text-white mb-2">Welcome Aboard!</h2>
               <p className="text-slate-300 max-w-md mx-auto mb-6">
-                Your PrimeStep account has been created successfully. We've sent a verification link to your email address.
+                Your account has been created successfully.
               </p>
               <button
                 type="button"

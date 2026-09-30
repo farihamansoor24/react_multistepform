@@ -1,6 +1,5 @@
-import React from 'react'
 
-const Step_2 = ({setStep}) => {
+const Step_2 = ({formData,handleChange}) => {
   return (
     <>
     <div className="step-content" data-step="2">
@@ -15,14 +14,19 @@ const Step_2 = ({setStep}) => {
                                 <label htmlFor="firstName" className="block text-sm font-medium text-slate-300 mb-1">First Name *</label>
                                 <input type="text" id="firstName" name="firstName" required
                                     className="w-full px-4 py-2.5 rounded-xl border border-indigo-900/60 bg-slate-950/60 text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
-                                    placeholder="Fariha" />
+                                    placeholder="Fariha"
+                                    value={formData.firstName || ''}
+                                    onChange={handleChange} />
                                 <span className="error-msg text-xs text-rose-400 mt-1 hidden">First name is required.</span>
                             </div>
                             <div>
                                 <label htmlFor="lastName" className="block text-sm font-medium text-slate-300 mb-1">Last Name *</label>
                                 <input type="text" id="lastName" name="lastName" required
                                     className="w-full px-4 py-2.5 rounded-xl border border-indigo-900/60 bg-slate-950/60 text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
-                                    placeholder="Mansoor" />
+                                    placeholder="Mansoor"
+                                    value={formData.lastName || ''}
+                                    onChange={handleChange}
+                                    />
                                 <span className="error-msg text-xs text-rose-400 mt-1 hidden">Last name is required.</span>
                             </div>
                         </div>
@@ -35,7 +39,10 @@ const Step_2 = ({setStep}) => {
                                 </span>
                                 <input type="tel" id="phone" name="phone" required pattern="[0-9\-\+\s]{10,}"
                                     className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-indigo-900/60 bg-slate-950/60 text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
-                                    placeholder="+92 000000000" />
+                                    placeholder="+92 000000000"
+                                    value={formData.phone || ''}
+                                    onChange={handleChange}
+                                    />
                             </div>
                             <span className="error-msg text-xs text-rose-400 mt-1 hidden">Please enter a valid phone number.</span>
                         </div>
@@ -43,7 +50,8 @@ const Step_2 = ({setStep}) => {
                         <div>
                             <label htmlFor="role" className="block text-sm font-medium text-slate-300 mb-1">Primary Industry / Role *</label>
                             <select id="role" name="role" required
-                                className="w-full px-4 py-2.5 rounded-xl border border-indigo-900/60 bg-slate-950/60 text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all">
+                                className="w-full px-4 py-2.5 rounded-xl border border-indigo-900/60 bg-slate-950/60 text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all " value={formData.role}
+                                    onChange={handleChange}>
                                 <option value="" className="bg-slate-900">Select your role</option>
                                 <option value="Fashion Designer" className="bg-slate-900">Fashion Designer</option>
                                 <option value="E-commerce Merchant" className="bg-slate-900">E-commerce Merchant</option>
