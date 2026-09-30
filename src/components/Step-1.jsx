@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Step_1 = ({ formData, handleChange }) => {
+const Step_1 = ({ formData, handleChange, errors }) => {
   return (
     <div className="step-content" data-step="1">
       <div className="mb-6">
@@ -81,10 +81,18 @@ const Step_1 = ({ formData, handleChange }) => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className="w-full pl-4 pr-4 py-2.5 rounded-xl border border-indigo-900/60 bg-slate-950/60 text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500 outline-none transition-all"
+                className={`w-full pl-4 pr-4 py-2.5 rounded-xl border ${
+                  errors?.confirmPassword ? 'border-rose-500 focus:ring-rose-500' : 'border-indigo-900/60 focus:ring-brand-500'
+                } bg-slate-950/60 text-white placeholder-slate-500 outline-none transition-all`}
                 placeholder="••••••••"
               />
             </div>
+            {/* Error Message Display */}
+            {errors?.confirmPassword && (
+              <span className="text-xs text-rose-400 mt-1 block font-medium">
+                {errors.confirmPassword}
+              </span>
+            )}
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ import Step4 from './components/Step-4';
 
 function App() {
   const [step, setStep] = useState(1);
-  const formRef = useRef(null); // Clean React DOM reference
+  const formRef = useRef(null);
 
   const [formData, setFormData] = useState({
     // Step-1
@@ -24,7 +24,12 @@ function App() {
     role: "",
     // Step-3
     subscription: "",
+    newsletter: false,
+    updates: false,
   });
+
+  // Validation Errors track karne ke liye
+  const [errors, setErrors] = useState({});
 
   const totalSteps = 4;
 
@@ -35,24 +40,41 @@ function App() {
     4: 'Review & Confirm'
   };
 
-  // Generic handler jo har type ke input field ki state update karega
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === 'checkbox' ? checked : value,
     }));
+
+    // User jab dubara type kare to mismatch error clear kar dein
+    if (name === "password" || name === "confirmPassword") {
+      setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+    }
   };
 
   const handleNext = (e) => {
     e.preventDefault();
-    // HTML5 validation check
+
+    // Step 1: Specific Passwords Match Check
+    if (step === 1) {
+      if (formData.password !== formData.confirmPassword) {
+        setErrors((prev) => ({
+          ...prev,
+          confirmPassword: "Passwords do not match!",
+        }));
+        return; // Next step par jane se rokein
+      }
+    }
+
+    // HTML5 native validation check (Required fields, minLength, email pattern etc.)
     if (formRef.current && formRef.current.checkValidity()) {
+      setErrors({});
       if (step < totalSteps) {
         setStep((prev) => prev + 1);
       }
     } else {
-      formRef.current?.reportValidity(); // Error popup trigger karega
+      formRef.current?.reportValidity();
     }
   };
 
@@ -65,8 +87,13 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      setErrors({ confirmPassword: "Passwords do not match!" });
+      setStep(1); // Password mismatch par step 1 par redirect karein
+      return;
+    }
     console.log("Final Data Submitted:", formData);
-    setStep(5); // Success Screen
+    setStep(5);
   };
 
   return (
@@ -132,7 +159,7 @@ function App() {
           {step <= totalSteps ? (
             <form ref={formRef} onSubmit={handleSubmit} className="p-6 sm:p-8">
               {/* STEP COMPONENTS */}
-              {step === 1 && <Step1 formData={formData} handleChange={handleChange} />}
+              {step === 1 && <Step1 formData={formData} handleChange={handleChange} errors={errors} />}
               {step === 2 && <Step2 formData={formData} handleChange={handleChange} />}
               {step === 3 && <Step3 formData={formData} handleChange={handleChange} />}
               {step === 4 && <Step4 formData={formData} setStep={setStep} />}
